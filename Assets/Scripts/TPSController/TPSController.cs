@@ -17,6 +17,8 @@ public class TPSController : MonoBehaviour
     private float _gravity = -9.81f;
     private Vector3 _playerGravity;
 
+    private GameManager _gameManager;
+
     //variables para rotacion
     private float turnSmoothVelocity;
     [SerializeField] float turnSmoothTime = 0.1f;
@@ -33,6 +35,7 @@ public class TPSController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
         _camera = Camera.main.transform;
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -52,6 +55,8 @@ public class TPSController : MonoBehaviour
 
         //Movement();
         Jump();
+
+        Die();
     }
 
     void Movement()
@@ -110,5 +115,14 @@ public class TPSController : MonoBehaviour
         _playerGravity.y += _gravity * Time.deltaTime;
 
         _controller.Move(_playerGravity * Time.deltaTime);
+    }
+
+    void Die()
+    {
+        if (Input.GetKey(KeyCode.M) && _gameManager._die == false)
+        {
+            _gameManager.DiePlayer();
+            _animator.SetTrigger("IsDie");
+        }
     }
 }
